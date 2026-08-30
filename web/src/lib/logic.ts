@@ -1,57 +1,60 @@
 /**
- * Pure game math — no React, no three.js. Keeping the rules here (instead of
- * buried in the render loop) makes them unit-testable: see logic.test.ts.
- * Replace these with your own game's rules; the pattern (pure logic + a thin
- * r3f render layer in components/Game.tsx) is what to keep.
+ * Pure game math — no React, no three.js.
  */
 
-/** Half-width of the square arena. Player + orbs stay within ±ARENA_HALF. */
-export const ARENA_HALF = 14;
-/** Player move speed, in world units per second. */
-export const PLAYER_SPEED = 11;
-/** How close the player must get to an orb to collect it. */
-export const PICKUP_RADIUS = 1.3;
-/** Seconds on the clock per round. */
-export const ROUND_SECONDS = 30;
+export const TRACK_HALF = 60;
+export const PLAYER_SPEED = 22;
+export const PLAYER_TURN_SPEED = 2.2;
+export const ROUND_SECONDS = 120;
+export const BULLET_SPEED = 45;
+export const BULLET_LIFE = 1.2;
+export const ENEMY_SPEED_BASE = 8;
 
 export function clamp(v: number, min: number, max: number): number {
   return v < min ? min : v > max ? max : v;
 }
 
-/** Squared 2D (x,z) distance — cheaper than a sqrt for pure comparisons. */
 export function dist2(ax: number, az: number, bx: number, bz: number): number {
   const dx = ax - bx;
   const dz = az - bz;
   return dx * dx + dz * dz;
 }
 
-/** True when (px,pz) is within `radius` of (ox,oz). */
-export function collides(px: number, pz: number, ox: number, oz: number, radius = PICKUP_RADIUS): boolean {
+export function dist(ax: number, az: number, bx: number, bz: number): number {
+  return Math.sqrt(dist2(ax, az, bx, bz));
+}
+
+export function collides(px: number, pz: number, ox: number, oz: number, radius = 1.5): boolean {
   return dist2(px, pz, ox, oz) <= radius * radius;
 }
 
-/** Keep a point inside the arena bounds. */
-export function clampToArena(x: number, z: number, half = ARENA_HALF): [number, number] {
+export function clampToTrack(x: number, z: number, half = TRACK_HALF): [number, number] {
   return [clamp(x, -half, half), clamp(z, -half, half)];
 }
 
-/**
- * A random orb position at least `minDist` from (avoidX, avoidZ) so an orb
- * never spawns on top of the player. `rand` defaults to Math.random but is
- * injectable so tests stay deterministic.
- */
-export function randomOrbPosition(
+export function randomPosition(
   avoidX: number,
   avoidZ: number,
-  half = ARENA_HALF,
-  minDist = 4,
+  half = TRACK_HALF,
+  minDist = 8,
   rand: () => number = Math.random,
 ): [number, number] {
-  for (let i = 0; i < 16; i++) {
-    const x = (rand() * 2 - 1) * half;
-    const z = (rand() * 2 - 1) * half;
+  for (let i = 0; i < 32; i++) {
+    const x = (rand() * 2 - 1) * half * 0.85;
+    const z = (rand() * 2 - 1) * half * 0.85;
     if (dist2(x, z, avoidX, avoidZ) >= minDist * minDist) return [x, z];
   }
-  // Fallback (extremely unlikely): mirror the avoid point to the far side.
-  return clampToArena(-avoidX, -avoidZ, half);
+  return [-avoidX * 0.9, -avoidZ * 0.9];
+}
+
+export function lerpAngle(a: number, b: number, t: number): number {
+  let diff = b - a;
+  while (diff > Math.PI) diff -= Math.PI * 2;
+  while (diff < -Math.PI) diff += Math.PI * 2;
+  return a + diff * t;
+}
+
+export function scoreForKill(): number { return 50; }
+export function scoreForPickup(type: string): number {
+  return type === "boost" ? 10 : type === "shield" ? 15 : type === "gun" ? 20 : 5;
 }
