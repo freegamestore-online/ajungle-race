@@ -34,9 +34,9 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: "APPNAME",
-        short_name: "APPNAME",
-        description: "APPNAME — free forever",
+        name: "A jungle race",
+        short_name: "A jungle race",
+        description: "A jungle race — free forever",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
