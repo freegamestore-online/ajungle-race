@@ -1,4 +1,17 @@
-export type GamePhase = "menu" | "playing" | "over";
+export type GamePhase = "charselect" | "playing" | "over";
+
+export interface Character {
+  id: string;
+  name: string;
+  gender: "girl" | "boy";
+  skin: "dark" | "medium-dark" | "medium" | "medium-light" | "light";
+  skinColor: string;
+  hairColor: string;
+  shirtColor: string;
+  carColor: string;
+  unlockLevel: number;
+  special: string;
+}
 
 export interface PowerUp {
   id: number;
@@ -33,17 +46,4 @@ export interface Enemy {
   speed: number;
   health: number;
   stunTimer: number;
-}
-
-export interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  z: number;
-  vx: number;
-  vy: number;
-  vz: number;
-  life: number;
-  maxLife: number;
-  color: string;
 }
