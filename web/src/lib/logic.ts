@@ -1,11 +1,11 @@
 export const TRACK_HALF_W = 10;
-export const PLAYER_MAX_SPEED = 14;
-export const PLAYER_ACCEL = 14;
-export const PLAYER_BRAKE = 22;
-export const PLAYER_TURN = 2.8;
-export const BULLET_SPEED = 44;
-export const BULLET_LIFE = 1.1;
-export const ENEMY_BASE_SPEED = 5;
+export const PLAYER_MAX_SPEED = 22;   // faster!
+export const PLAYER_ACCEL = 22;
+export const PLAYER_BRAKE = 32;
+export const PLAYER_TURN = 3.2;
+export const BULLET_SPEED = 55;
+export const BULLET_LIFE = 1.0;
+export const ENEMY_BASE_SPEED = 6;
 
 export function clamp(v: number, lo: number, hi: number): number {
   return v < lo ? lo : v > hi ? hi : v;
@@ -20,9 +20,4 @@ export function lerpAngle(a: number, b: number, t: number): number {
   return a + d * t;
 }
 export function scoreForKill(): number { return 50; }
-export function scoreForPickup(type: string): number {
-  if (type === "gun") return 20;
-  if (type === "shield") return 15;
-  if (type === "boost") return 10;
-  return 5;
-}
+export function scoreForPickup(_type: string): number { return 10; }
