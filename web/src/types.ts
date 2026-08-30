@@ -1,16 +1,19 @@
-export type GamePhase = "charselect" | "playing" | "over";
+export type GamePhase = "instructions" | "charselect" | "playing" | "over";
 
 export interface Character {
   id: string;
   name: string;
   gender: "girl" | "boy";
-  skin: "dark" | "medium-dark" | "medium" | "medium-light" | "light";
   skinColor: string;
   hairColor: string;
   shirtColor: string;
-  carColor: string;
+  pantsColor: string;
+  shoeColor: string;
   unlockLevel: number;
   special: string;
+  specialDesc: string;
+  speedBonus: number;
+  shieldBonus: number;
 }
 
 export interface PowerUp {
